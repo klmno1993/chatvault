@@ -1,0 +1,43 @@
+{
+  "app": {
+    "name": "ChatVault"
+  },
+  "nav": {
+    "allConversations": "All Conversations",
+    "starred": "Starred",
+    "recent": "Recent",
+    "archived": "Archived",
+    "tags": "Tags",
+    "folders": "Folders",
+    "highlights": "Highlights",
+    "import": "Import",
+    "stats": "Statistics",
+    "settings": "Settings"
+  },
+  "conversations": {
+    "empty": "No conversations yet",
+    "emptyHint": "Import your AI conversation history to get started",
+    "messages": "messages",
+    "search": "Search conversations…",
+    "importNow": "Import Now"
+  },
+  "platforms": {
+    "chatgpt": "ChatGPT",
+    "claude": "Claude",
+    "gemini": "Gemini",
+    "generic": "Other"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "actions": {
+    "star": "Star",
+    "unstar": "Unstar",
+    "archive": "Archive",
+    "delete": "Delete",
+    "export": "Export",
+    "addTag": "Add Tag"
+  }
+}
