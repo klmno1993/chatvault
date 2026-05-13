@@ -1,4 +1,13 @@
 export type Platform = 'chatgpt' | 'claude' | 'gemini' | 'generic'
+export type MessageRole = 'user' | 'assistant' | 'system'
+
+export interface Message {
+  id: string
+  conversationId: string
+  role: MessageRole
+  content: string
+  createdAt: string
+}
 
 export interface Tag {
   id: string
@@ -132,5 +141,207 @@ export const mockConversations: Conversation[] = [
     summary: '讨论了透视线、光影对比和几何抽象在建筑摄影中的运用，附带案例分析。',
     sourceCreatedAt: '2025-05-01T14:00:00Z',
     updatedAt: '2025-05-01T14:45:00Z',
+  },
+]
+
+// Mock messages for conversation id='1' (Rust HTTP server)
+export const mockMessages: Message[] = [
+  {
+    id: 'm1',
+    conversationId: '1',
+    role: 'user',
+    content: '我想用 Rust 写一个高性能 HTTP 服务器，目标是支持 10 万 QPS。应该从哪里开始？用什么异步运行时比较好？',
+    createdAt: '2025-05-10T14:23:00Z',
+  },
+  {
+    id: 'm2',
+    conversationId: '1',
+    role: 'assistant',
+    content: `好问题！在 Rust 生态里做高性能 HTTP 服务，**Tokio** 是目前最成熟的异步运行时选择。下面是一个系统性的入门路径：
+
+## 技术选型
+
+| 层级 | 推荐选择 | 备注 |
+|------|---------|------|
+| 异步运行时 | \`tokio\` | 生产级，被 AWS、Discord 大规模使用 |
+| HTTP 框架 | \`axum\` | Tokio 官方出品，ergonomic API |
+| 序列化 | \`serde\` + \`serde_json\` | 标准选择 |
+| 连接池 | \`deadpool\` 或 \`bb8\` | 数据库连接复用 |
+
+## 最简单的起步代码
+
+\`\`\`rust
+use axum::{routing::get, Router};
+use std::net::SocketAddr;
+
+#[tokio::main]
+async fn main() {
+    let app = Router::new().route("/", get(handler));
+
+    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
+    println!("Listening on {}", addr);
+
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+}
+
+async fn handler() -> &'static str {
+    "Hello, World!"
+}
+\`\`\`
+
+## 要达到 10 万 QPS 需要关注的核心点
+
+1. **零拷贝 I/O**：使用 \`bytes::Bytes\` 避免不必要的内存拷贝
+2. **连接复用**：HTTP/1.1 keep-alive 和 HTTP/2 多路复用
+3. **线程模型**：Tokio 的 work-stealing 调度器默认已经是多线程的，通常不需要额外配置
+4. **避免阻塞**：所有 I/O 操作必须是 \`async\` 的，绝对不能在 async 上下文里调用同步阻塞 API
+
+你目前的应用场景是什么？纯静态响应、代理、还是有数据库查询？这会影响具体的优化方向。`,
+    createdAt: '2025-05-10T14:24:30Z',
+  },
+  {
+    id: 'm3',
+    conversationId: '1',
+    role: 'user',
+    content: '主要是 API 服务，有数据库查询（PostgreSQL）。我担心数据库连接池的配置，应该设多大？',
+    createdAt: '2025-05-10T14:31:00Z',
+  },
+  {
+    id: 'm4',
+    conversationId: '1',
+    role: 'assistant',
+    content: `连接池大小是个经常被误解的参数——**更大不等于更快**，实际上设置过大反而会拖慢性能。
+
+## 连接池大小的理论依据
+
+PostgreSQL 官方有一个著名的经验公式：
+
+$$\\text{pool\\_size} = (\\text{core\\_count} \\times 2) + \\text{effective\\_spindle\\_count}$$
+
+对于现代 SSD 服务器，\`effective_spindle_count\` 通常取 1，所以一台 8 核机器的推荐连接池大小约为 **17**。
+
+## 实际配置示例（使用 sqlx）
+
+\`\`\`rust
+use sqlx::postgres::PgPoolOptions;
+
+let pool = PgPoolOptions::new()
+    .max_connections(20)          // 最大连接数
+    .min_connections(5)           // 保持最小空闲连接
+    .acquire_timeout(Duration::from_secs(3))   // 获取连接超时
+    .idle_timeout(Duration::from_secs(600))    // 空闲连接超时
+    .max_lifetime(Duration::from_secs(1800))   // 连接最大生命周期
+    .connect(&database_url)
+    .await?;
+\`\`\`
+
+## 为什么连接数不能太多？
+
+原因在于 PostgreSQL 的进程模型：**每个连接对应一个 OS 进程**，连接数过多会导致：
+
+- 频繁的上下文切换开销
+- 内存占用线性增长（每个连接约 5-10MB）
+- 锁竞争加剧
+
+> 💡 如果你的 QPS 目标是 10 万，瓶颈通常不在连接池，而在**查询本身的效率**。你的热路径查询有没有加索引？
+
+你能分享一下主要的查询模式吗？`,
+    createdAt: '2025-05-10T14:35:00Z',
+  },
+  {
+    id: 'm5',
+    conversationId: '1',
+    role: 'user',
+    content: '主要是根据 user_id 查用户信息，然后有一个复杂的聚合查询统计用户行为数据，这个查询大概需要 200ms。',
+    createdAt: '2025-05-10T14:40:00Z',
+  },
+  {
+    id: 'm6',
+    conversationId: '1',
+    role: 'assistant',
+    content: `200ms 的聚合查询是个明显的瓶颈，但这个完全可以解决。我来分两个方向给你：
+
+## 方向一：缓存层（推荐优先做）
+
+对于聚合统计类数据，实时计算往往不必要。加一层缓存可以让绝大多数请求直接命中缓存：
+
+\`\`\`rust
+use std::sync::Arc;
+use tokio::sync::RwLock;
+use std::collections::HashMap;
+use std::time::{Duration, Instant};
+
+struct CacheEntry {
+    data: serde_json::Value,
+    expires_at: Instant,
+}
+
+type Cache = Arc<RwLock<HashMap<String, CacheEntry>>>;
+
+async fn get_user_stats(
+    user_id: i64,
+    cache: Cache,
+    db: &PgPool,
+) -> Result<serde_json::Value> {
+    let key = format!("stats:{}", user_id);
+
+    // 先查缓存
+    {
+        let r = cache.read().await;
+        if let Some(entry) = r.get(&key) {
+            if entry.expires_at > Instant::now() {
+                return Ok(entry.data.clone());
+            }
+        }
+    }
+
+    // 缓存 miss，查数据库
+    let data = fetch_stats_from_db(user_id, db).await?;
+
+    // 写回缓存，TTL 60 秒
+    {
+        let mut w = cache.write().await;
+        w.insert(key, CacheEntry {
+            data: data.clone(),
+            expires_at: Instant::now() + Duration::from_secs(60),
+        });
+    }
+
+    Ok(data)
+}
+\`\`\`
+
+## 方向二：查询优化
+
+如果统计数据必须实时，先看看你的聚合查询是否有这些问题：
+
+\`\`\`sql
+-- 坏的写法：全表扫描
+SELECT COUNT(*), SUM(value)
+FROM user_events
+WHERE user_id = $1;
+
+-- 好的写法：确保有复合索引
+CREATE INDEX CONCURRENTLY idx_user_events_user_id_created
+ON user_events(user_id, created_at DESC);
+
+-- 或者用物化视图预计算
+CREATE MATERIALIZED VIEW user_stats AS
+SELECT
+    user_id,
+    COUNT(*) as event_count,
+    SUM(value) as total_value
+FROM user_events
+GROUP BY user_id;
+
+-- 定时刷新（每分钟）
+REFRESH MATERIALIZED VIEW CONCURRENTLY user_stats;
+\`\`\`
+
+你现在的聚合查询能贴出来看看吗？200ms 可以优化到 10ms 以内通常是可行的。`,
+    createdAt: '2025-05-10T14:48:00Z',
   },
 ]

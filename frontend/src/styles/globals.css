@@ -98,3 +98,133 @@
 .dark .hljs {
   background: var(--bg-subtle);
 }
+
+/* ── Markdown prose styles ───────────────────────────────────────────────── */
+.prose-content {
+  color: var(--text-primary);
+  line-height: 1.75;
+  font-size: 14px;
+}
+
+.prose-content p { margin: 0 0 0.875em; }
+.prose-content p:last-child { margin-bottom: 0; }
+
+.prose-content h1, .prose-content h2, .prose-content h3,
+.prose-content h4, .prose-content h5, .prose-content h6 {
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary);
+  margin: 1.25em 0 0.5em;
+}
+.prose-content h1 { font-size: 1.375em; }
+.prose-content h2 { font-size: 1.2em; }
+.prose-content h3 { font-size: 1.05em; }
+.prose-content h1:first-child,
+.prose-content h2:first-child,
+.prose-content h3:first-child { margin-top: 0; }
+
+.prose-content strong { font-weight: 600; color: var(--text-primary); }
+.prose-content em { font-style: italic; }
+
+.prose-content a {
+  color: var(--accent-text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+.prose-content a:hover { border-color: var(--accent-text); }
+
+/* Inline code */
+.prose-content :not(pre) > code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.85em;
+  background: var(--bg-subtle);
+  color: var(--accent-text);
+  padding: 0.15em 0.4em;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+}
+
+/* Code blocks */
+.prose-content pre {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 0.875em 0;
+}
+.prose-content pre code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 13px;
+  background: none;
+  color: inherit;
+  padding: 0;
+  border: none;
+  line-height: 1.65;
+}
+
+/* Blockquote */
+.prose-content blockquote {
+  border-left: 3px solid var(--accent);
+  margin: 0.875em 0;
+  padding: 0.5em 0 0.5em 1em;
+  color: var(--text-secondary);
+}
+.prose-content blockquote p { margin: 0; }
+
+/* Lists */
+.prose-content ul, .prose-content ol {
+  padding-left: 1.5em;
+  margin: 0.5em 0 0.875em;
+}
+.prose-content li { margin: 0.3em 0; }
+.prose-content ul { list-style-type: disc; }
+.prose-content ol { list-style-type: decimal; }
+.prose-content li > ul, .prose-content li > ol { margin: 0.2em 0; }
+
+/* Tables */
+.prose-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.875em 0;
+  font-size: 13px;
+}
+.prose-content th {
+  text-align: left;
+  font-weight: 600;
+  padding: 0.5em 0.875em;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.prose-content td {
+  padding: 0.5em 0.875em;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+.prose-content tr:last-child td { border-bottom: none; }
+.prose-content thead th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+.prose-content thead th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+
+/* Task list */
+.prose-content input[type="checkbox"] {
+  margin-right: 0.4em;
+  accent-color: var(--accent);
+}
+
+/* Horizontal rule — using subtle approach */
+.prose-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5em 0;
+}
+
+/* KaTeX math */
+.prose-content .katex-display {
+  overflow-x: auto;
+  padding: 0.5em 0;
+}
