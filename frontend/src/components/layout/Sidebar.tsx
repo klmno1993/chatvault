@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   MessageSquare, Star, Clock, Archive, X,
-  Highlighter, Upload, BarChart2, Settings, Sun, Moon, Monitor,
+  Highlighter, Upload, BarChart2, Settings, Sun, Moon, Monitor, Search,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { cn } from '@/lib/utils'
@@ -43,7 +43,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function Sidebar({ onClose }: { onClose?: () => void }) {
+export function Sidebar({ onClose, onSearchOpen }: { onClose?: () => void; onSearchOpen?: () => void }) {
   const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
 
@@ -58,7 +58,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       className="flex flex-col h-screen border-r border-[var(--line-hairline)] bg-[var(--bg-surface)]"
       style={{ width: 'var(--sidebar-width)', flexShrink: 0 }}
     >
-      {/* Logo + close button (close only visible on mobile) */}
+      {/* Logo + close button */}
       <div className="flex items-center gap-2 px-4 py-4 mb-1">
         <div
           className="w-7 h-7 rounded-[8px] flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
@@ -78,6 +78,20 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           </button>
         )}
       </div>
+
+      {/* Search button — desktop */}
+      {onSearchOpen && (
+        <div className="hidden lg:block px-2 mb-1">
+          <button
+            onClick={onSearchOpen}
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-sm text-[var(--text-tertiary)] hover:bg-[var(--bg-sunken)] hover:text-[var(--text-secondary)] transition-colors"
+          >
+            <Search size={15} strokeWidth={1.75} />
+            <span className="flex-1 text-left">搜索</span>
+            <kbd className="text-[10px] font-mono opacity-60">⌘K</kbd>
+          </button>
+        </div>
+      )}
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-2 pb-4">
