@@ -8,8 +8,10 @@ import { TagChip } from '@/components/ui/TagChip'
 interface ConversationViewProps {
   conversation: Conversation
   messages: Message[]
-  onBack?: () => void  // mobile only
+  onBack?: () => void
 }
+
+const iconBtn = 'p-1.5 rounded-[7px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors'
 
 export function ConversationView({ conversation, messages, onBack }: ConversationViewProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -20,70 +22,61 @@ export function ConversationView({ conversation, messages, onBack }: Conversatio
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="flex-shrink-0 px-4 md:px-6 py-4 border-b border-[var(--border)]">
-        <div className="flex items-start gap-3">
-          {/* Back button — mobile only */}
-          {onBack && (
-            <button
-              onClick={onBack}
-              className="mt-0.5 p-1.5 -ml-1.5 rounded-[8px] text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors flex-shrink-0"
-            >
-              <ArrowLeft size={16} />
-            </button>
-          )}
-
-          {/* Title area */}
-          <div className="flex-1 min-w-0">
-            <h2 className="font-semibold text-[var(--text-primary)] text-[15px] leading-snug">
-              {conversation.title}
-            </h2>
-            <div className="flex items-center flex-wrap gap-2 mt-1.5">
-              <PlatformBadge platform={conversation.platform} />
-              {conversation.modelUsed && (
-                <span className="text-[11px] text-[var(--text-tertiary)]">
-                  {conversation.modelUsed}
-                </span>
-              )}
-              <span className="text-[11px] text-[var(--text-tertiary)]">
-                {messages.length} 条消息
-              </span>
-            </div>
-            {conversation.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-2">
-                {conversation.tags.map(tag => (
-                  <TagChip key={tag.id} tag={tag} />
-                ))}
-              </div>
+      {/* Header — clean, content-first */}
+      <div className="flex-shrink-0 px-4 md:px-8 pt-5 pb-4 border-b border-[var(--border)]">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-start gap-2">
+            {onBack && (
+              <button onClick={onBack} className={`mt-1 ${iconBtn} -ml-1`}>
+                <ArrowLeft size={15} />
+              </button>
             )}
-          </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-1 flex-shrink-0">
-            <button className={[
-              'p-2 rounded-[8px] transition-colors',
-              conversation.isStarred
-                ? 'text-[var(--accent)]'
-                : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)]',
-            ].join(' ')}>
-              <Star size={15} fill={conversation.isStarred ? 'currentColor' : 'none'} />
-            </button>
-            <button className="p-2 rounded-[8px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors">
-              <Tag size={15} />
-            </button>
-            <button className="p-2 rounded-[8px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors">
-              <Download size={15} />
-            </button>
-            <button className="p-2 rounded-[8px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors">
-              <MoreHorizontal size={15} />
-            </button>
+            <div className="flex-1 min-w-0">
+              {/* Title — commanding */}
+              <h1 className="text-[18px] font-semibold leading-snug tracking-tight text-[var(--text-primary)] mb-2">
+                {conversation.title}
+              </h1>
+
+              {/* Meta row — all tertiary, small */}
+              <div className="flex items-center flex-wrap gap-x-2.5 gap-y-1">
+                <PlatformBadge platform={conversation.platform} />
+                {conversation.modelUsed && (
+                  <span className="text-[12px] text-[var(--text-tertiary)]">{conversation.modelUsed}</span>
+                )}
+                <span className="text-[var(--text-tertiary)] text-[12px]">·</span>
+                <span className="text-[12px] text-[var(--text-tertiary)]">{messages.length} 条消息</span>
+                {conversation.tags.length > 0 && (
+                  <>
+                    <span className="text-[var(--text-tertiary)] text-[12px]">·</span>
+                    <div className="flex flex-wrap gap-1">
+                      {conversation.tags.map(tag => (
+                        <TagChip key={tag.id} tag={tag} />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Actions — subtle, line icons */}
+            <div className="flex items-center gap-0.5 ml-2 flex-shrink-0">
+              <button className={conversation.isStarred
+                ? 'p-1.5 rounded-[7px] text-[var(--accent)] hover:bg-[var(--accent-subtle)] transition-colors'
+                : iconBtn}>
+                <Star size={15} fill={conversation.isStarred ? 'currentColor' : 'none'} strokeWidth={1.75} />
+              </button>
+              <button className={iconBtn}><Tag size={15} strokeWidth={1.75} /></button>
+              <button className={iconBtn}><Download size={15} strokeWidth={1.75} /></button>
+              <button className={iconBtn}><MoreHorizontal size={15} strokeWidth={1.75} /></button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Messages */}
+      {/* Messages — generous space, max readable width */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto px-4 md:px-8 py-8 space-y-10">
+        <div className="max-w-3xl mx-auto px-4 md:px-8 py-10 space-y-10">
           {messages.map(msg => (
             <MessageBubble key={msg.id} message={msg} />
           ))}
