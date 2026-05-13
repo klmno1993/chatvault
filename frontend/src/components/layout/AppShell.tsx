@@ -7,7 +7,7 @@ export function AppShell() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--bg-app)]">
+    <div className="flex h-screen overflow-hidden bg-[var(--bg-canvas)]">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -30,10 +30,10 @@ export function AppShell() {
       {/* Main */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden bg-[var(--bg-surface)]">
         {/* Mobile top bar */}
-        <header className="flex items-center gap-3 px-4 py-3 border-b border-[var(--border)] lg:hidden">
+        <header className="flex items-center gap-3 px-4 py-3 border-b border-[var(--line-hairline)] lg:hidden">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-1.5 rounded-[8px] text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors"
+            className="p-1.5 rounded-[8px] text-[var(--text-secondary)] hover:bg-[var(--bg-sunken)] transition-colors"
           >
             <Menu size={18} />
           </button>

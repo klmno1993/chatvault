@@ -10,27 +10,31 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    return (localStorage.getItem('theme') as Theme) ?? 'system'
-  })
+function applyTheme(resolved: 'light' | 'dark') {
+  document.documentElement.setAttribute('data-theme', resolved)
+}
 
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>(() =>
+    (localStorage.getItem('theme') as Theme) ?? 'system'
+  )
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('dark')
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-color-scheme: dark)')
 
-    const apply = (t: Theme) => {
-      const resolved = t === 'system' ? (media.matches ? 'dark' : 'light') : t
+    const resolve = (t: Theme): 'light' | 'dark' =>
+      t === 'system' ? (media.matches ? 'dark' : 'light') : t
+
+    const update = () => {
+      const resolved = resolve(theme)
       setResolvedTheme(resolved)
-      document.documentElement.classList.toggle('dark', resolved === 'dark')
+      applyTheme(resolved)
     }
 
-    apply(theme)
-
-    const handler = () => { if (theme === 'system') apply('system') }
-    media.addEventListener('change', handler)
-    return () => media.removeEventListener('change', handler)
+    update()
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
   }, [theme])
 
   const setTheme = (t: Theme) => {

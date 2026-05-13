@@ -11,7 +11,7 @@ interface ConversationViewProps {
   onBack?: () => void
 }
 
-const iconBtn = 'p-1.5 rounded-[7px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] transition-colors'
+const iconBtn = 'p-1.5 rounded-[7px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-sunken)] transition-colors'
 
 export function ConversationView({ conversation, messages, onBack }: ConversationViewProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -23,7 +23,7 @@ export function ConversationView({ conversation, messages, onBack }: Conversatio
   return (
     <div className="flex flex-col h-full">
       {/* Header — clean, content-first */}
-      <div className="flex-shrink-0 px-4 md:px-8 pt-5 pb-4 border-b border-[var(--border)]">
+      <div className="flex-shrink-0 px-4 md:px-8 pt-5 pb-4 border-b border-[var(--line-hairline)]">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-start gap-2">
             {onBack && (
@@ -62,7 +62,7 @@ export function ConversationView({ conversation, messages, onBack }: Conversatio
             {/* Actions — subtle, line icons */}
             <div className="flex items-center gap-0.5 ml-2 flex-shrink-0">
               <button className={conversation.isStarred
-                ? 'p-1.5 rounded-[7px] text-[var(--accent)] hover:bg-[var(--accent-subtle)] transition-colors'
+                ? 'p-1.5 rounded-[7px] text-[var(--accent)] hover:bg-[var(--accent-soft)] transition-colors'
                 : iconBtn}>
                 <Star size={15} fill={conversation.isStarred ? 'currentColor' : 'none'} strokeWidth={1.75} />
               </button>

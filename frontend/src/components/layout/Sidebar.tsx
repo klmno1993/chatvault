@@ -24,8 +24,8 @@ function NavItem({ to, icon: Icon, label, end, onNavigate }: {
         cn(
           'flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-sm transition-colors duration-150',
           isActive
-            ? 'bg-[var(--accent-subtle)] text-[var(--accent-text)] font-medium'
-            : 'text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] hover:text-[var(--text-primary)]',
+            ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-medium'
+            : 'text-[var(--text-secondary)] hover:bg-[var(--bg-sunken)] hover:text-[var(--text-primary)]',
         )
       }
     >
@@ -55,7 +55,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
 
   return (
     <aside
-      className="flex flex-col h-screen border-r border-[var(--border)] bg-[var(--bg-surface)]"
+      className="flex flex-col h-screen border-r border-[var(--line-hairline)] bg-[var(--bg-surface)]"
       style={{ width: 'var(--sidebar-width)', flexShrink: 0 }}
     >
       {/* Logo + close button (close only visible on mobile) */}
@@ -72,7 +72,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden p-1.5 rounded-[8px] text-[var(--text-tertiary)] hover:bg-[var(--bg-subtle)] transition-colors"
+            className="lg:hidden p-1.5 rounded-[8px] text-[var(--text-tertiary)] hover:bg-[var(--bg-sunken)] transition-colors"
           >
             <X size={16} />
           </button>
@@ -96,8 +96,8 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
               cn(
                 'flex items-center gap-2.5 px-3 py-2 rounded-[10px] text-sm transition-colors duration-150',
                 isActive
-                  ? 'bg-[var(--accent-subtle)] text-[var(--accent-text)] font-medium'
-                  : 'text-[var(--text-secondary)] hover:bg-[var(--bg-subtle)] hover:text-[var(--text-primary)]',
+                  ? 'bg-[var(--accent-soft)] text-[var(--accent)] font-medium'
+                  : 'text-[var(--text-secondary)] hover:bg-[var(--bg-sunken)] hover:text-[var(--text-primary)]',
               )
             }
           >
@@ -116,10 +116,10 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
       </nav>
 
       {/* Bottom: theme + settings */}
-      <div className="px-3 py-3 border-t border-[var(--border)]">
+      <div className="px-3 py-3 border-t border-[var(--line-hairline)]">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[11px] text-[var(--text-tertiary)]">外观</span>
-          <div className="flex items-center gap-0.5 p-0.5 rounded-[8px] bg-[var(--bg-subtle)]">
+          <div className="flex items-center gap-0.5 p-0.5 rounded-[8px] bg-[var(--bg-sunken)]">
             {themes.map(({ value, icon: Icon }) => (
               <button
                 key={value}

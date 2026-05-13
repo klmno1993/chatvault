@@ -32,8 +32,8 @@ export function ConversationCard({ conversation, isActive, onClick }: Conversati
       className={cn(
         'w-full text-left px-3 py-3.5 rounded-[var(--radius-md)] transition-all duration-150 relative',
         isActive
-          ? 'bg-[var(--bg-elevated)] shadow-[var(--shadow-sm)]'
-          : 'hover:bg-[var(--bg-subtle)]',
+          ? 'bg-[var(--bg-raised)] shadow-[var(--shadow-1)]'
+          : 'hover:bg-[var(--bg-sunken)]',
       )}
     >
       {/* Active indicator — left border */}
