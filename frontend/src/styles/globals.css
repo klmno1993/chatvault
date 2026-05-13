@@ -96,7 +96,152 @@
 
 /* Highlight.js dark mode override */
 .dark .hljs {
+  background: transparent;
+}
+
+/* ── Code block with header ──────────────────────────────────────────────── */
+.code-block-wrapper {
+  margin: 0.875em 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
   background: var(--bg-subtle);
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45em 0.875em;
+  background: var(--bg-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.code-lang {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
+
+.code-copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.code-copy-btn:hover { color: var(--text-primary); background: var(--bg-subtle); }
+
+.code-block-wrapper pre {
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 1rem 1.25rem !important;
+}
+
+/* ── Message layout ──────────────────────────────────────────────────────── */
+.user-bubble {
+  max-width: min(75%, 520px);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md) var(--radius-md) 4px var(--radius-md);
+  padding: 10px 14px;
+  color: var(--text-primary);
+}
+
+.dark .user-bubble {
+  background: var(--bg-elevated);
+}
+
+.assistant-message {
+  position: relative;
+}
+
+.assistant-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.assistant-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.assistant-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.message-time {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-left: auto;
+}
+
+.message-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: color 0.15s;
+}
+.message-copy-btn:hover { color: var(--text-primary); }
+
+/* ── Thinking block ──────────────────────────────────────────────────────── */
+.thinking-block {
+  margin-bottom: 12px;
+}
+
+.thinking-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px 0;
+  transition: color 0.15s;
+}
+.thinking-toggle:hover { color: var(--text-secondary); }
+
+.thinking-content {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-left: 2px solid var(--border-strong);
+  color: var(--text-tertiary);
+  font-size: 13px;
+  line-height: 1.65;
+  font-style: italic;
 }
 
 /* ── Markdown prose styles ───────────────────────────────────────────────── */

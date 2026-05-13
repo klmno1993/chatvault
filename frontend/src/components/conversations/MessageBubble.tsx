@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { Copy, Check, ChevronDown, ChevronRight, BrainCircuit } from 'lucide-react'
 import type { Message } from '@/lib/mock-data'
 import { Markdown } from '@/components/ui/Markdown'
 import { cn } from '@/lib/utils'
@@ -6,56 +8,87 @@ function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
 }
 
+function ThinkingBlock({ content }: { content: string }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="thinking-block">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="thinking-toggle"
+      >
+        <BrainCircuit size={13} />
+        <span>已深度思考</span>
+        {open ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+      </button>
+      {open && (
+        <div className="thinking-content">
+          <p>{content}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
 interface MessageBubbleProps {
   message: Message
 }
 
 export function MessageBubble({ message }: MessageBubbleProps) {
+  const [copied, setCopied] = useState(false)
   const isUser = message.role === 'user'
 
-  return (
-    <div className={cn('flex gap-3', isUser ? 'justify-end' : 'justify-start')}>
-      {/* Avatar — assistant only */}
-      {!isUser && (
-        <div
-          className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-white text-[11px] font-semibold mt-0.5"
-          style={{ background: 'var(--accent)' }}
-        >
-          AI
-        </div>
-      )}
+  const handleCopy = () => {
+    navigator.clipboard.writeText(message.content)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
-      {/* Bubble */}
-      <div
-        className={cn(
-          'max-w-[85%] md:max-w-[75%] rounded-[var(--radius-md)] px-4 py-3',
-          isUser
-            ? 'bg-[var(--accent)] text-white rounded-tr-[4px]'
-            : 'bg-[var(--bg-subtle)] rounded-tl-[4px]',
-        )}
-      >
-        {isUser ? (
+  if (isUser) {
+    return (
+      <div className="flex justify-end">
+        <div className="user-bubble">
           <p className="text-[14px] leading-relaxed whitespace-pre-wrap">{message.content}</p>
-        ) : (
-          <Markdown content={message.content} />
-        )}
+        </div>
+      </div>
+    )
+  }
 
-        <p className={cn(
-          'text-[11px] mt-2 text-right',
-          isUser ? 'text-white/60' : 'text-[var(--text-tertiary)]',
-        )}>
-          {formatTime(message.createdAt)}
-        </p>
+  // Assistant — document style
+  return (
+    <div className="assistant-message group">
+      {/* Avatar row */}
+      <div className="assistant-avatar-row">
+        <div className="assistant-avatar">AI</div>
+        <span className="assistant-label">助手</span>
+        <span className="message-time">{formatTime(message.createdAt)}</span>
       </div>
 
-      {/* User avatar spacer */}
-      {isUser && (
-        <div
-          className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-[11px] font-semibold mt-0.5 bg-[var(--bg-muted)] text-[var(--text-secondary)]"
-        >
-          我
+      {/* Thinking block */}
+      {message.thinkingContent && (
+        <div className="pl-9">
+          <ThinkingBlock content={message.thinkingContent} />
         </div>
       )}
+
+      {/* Content */}
+      <div className="pl-9 relative">
+        <Markdown content={message.content} />
+
+        {/* Copy button — appears on hover */}
+        <button
+          onClick={handleCopy}
+          className={cn(
+            'message-copy-btn',
+            'opacity-0 group-hover:opacity-100 transition-opacity',
+          )}
+          title="复制消息"
+        >
+          {copied
+            ? <><Check size={12} />已复制</>
+            : <><Copy size={12} />复制</>}
+        </button>
+      </div>
     </div>
   )
 }

@@ -6,6 +6,7 @@ export interface Message {
   conversationId: string
   role: MessageRole
   content: string
+  thinkingContent?: string
   createdAt: string
 }
 
@@ -157,6 +158,15 @@ export const mockMessages: Message[] = [
     id: 'm2',
     conversationId: '1',
     role: 'assistant',
+    thinkingContent: `Let me think through this carefully. The user wants to build a high-performance HTTP server in Rust targeting 100k QPS.
+
+Key considerations:
+1. Async runtime choice: Tokio is the clear winner here - it's the most mature, battle-tested, and has the best ecosystem
+2. HTTP framework: axum (Tokio-native) or actix-web (uses its own executor but very fast)
+3. The user is asking where to start, so I should give a structured approach
+4. 100k QPS is achievable with Rust - I should validate this goal and give concrete guidance
+
+I'll recommend Tokio + axum as the stack, explain why, give a minimal code example, and outline the key performance considerations. I should also ask about their use case (static responses vs DB queries) since that significantly affects the optimization strategy.`,
     content: `好问题！在 Rust 生态里做高性能 HTTP 服务，**Tokio** 是目前最成熟的异步运行时选择。下面是一个系统性的入门路径：
 
 ## 技术选型
